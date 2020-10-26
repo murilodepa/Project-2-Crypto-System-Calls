@@ -6,17 +6,21 @@
 #include <fcntl.h>
 int main()
 {  
-    printf("Invoking 'listProcessInfo' system call");
+    	printf("Invoking 'listProcessInfo' system call");
 
 	int fd = open("arquivo.txt",O_RDWR);
 
 	if(fd<0) printf("deu ruim no arquivo");
-         
-    	long int ret_status = syscall(333,fd,1); 
+	char buffer[16];
+	printf("ESCREVA A STRING:\n");
+	__fpurge(stdin);
+	gets(buffer);
+        
+    	long int ret_status = syscall(333,fd,1,buffer); 
 	
-	ret_status = syscall(333,fd,2);
-         
-    	
+	//char bufferReturn;
+	//ret_status = syscall(333,fd,2,bufferReturn);
+        //printf("%s",bufferReturn);
 	close(fd);
          
     if(ret_status == 0) {
