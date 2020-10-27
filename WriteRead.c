@@ -193,9 +193,8 @@ static int test_skcipher(char *scratchpad1, int tam, int tipo)
     pr_info("Encryption triggered successfully\n");
     resultdata = sg_virt(&sk.sg);
     strcpy(result, resultdata);
-
-    print_hex_dump(KERN_DEBUG, "encr text: ", DUMP_PREFIX_NONE, 16, 1,
-                   resultdata, 64, true);
+	
+	printk("\nPASSOUMESSMO??\n");
 
 out:
     if (skcipher)
@@ -240,45 +239,63 @@ int file_read(struct file *file, unsigned char *data, unsigned int size)
     return ret;
 }   
 
-asmlinkage long sys_listProcessInfo(int fd, int tipo,char *buffer) {    
+asmlinkage long write_crypt(int fd,char *buffer, size_t nbytes)  {    
 	printk("ENTROU");
-	if(tipo==1){
+	
 	//char str[27]="TESTANDO STRING DE ESCRITA";
 	printk("ABLALBALBLAB");
 	printk("%s",buffer);
 	int n;
 	
 	n=strlen(buffer);
-
-	//char bufferPreferencia;
+	
 	int cont=n;
+	
+	test_skcipher(buffer, 16, 1);//1 p/ encrypt
 
-	while(cont<16){
-		
-		buffer[cont]='0';
-		cont++;	
-	}
-	buffer[16]='\0';
-		
-	test_skcipher(buffer, 16, 1);
- 	file_write(fd,buffer,16);
+	char vet[64];
+	int j=0,i=0;
+	while (i < 16)
+        {
+            vet[j] = toString((unsigned char)result[i] / 16);
+            j++;
+            vet[j] = toString((unsigned char)result[i] % 16);
+            j++;
+            i++;
+        }
+        vet[j] = '\0';
+	
+	printk("%s\n",vet);
 
-	}else if(tipo==2){
+ 	file_write(fd,vet,32);	
 
-	char buff[50];
+  return 0;
+}
+
+
+asmlinkage long read_crypt(int fd,char *buffer, size_t nbytes) { 
+
+	char buff[50],message_conv[16];
 	size_t n;
 
 	n=sizeof(buff);
+	
+	file_read(fd,buff,32);
+	
 
-	file_read(fd,buff,n);
+	printk("PRINTANFDO BUFF: %s\n",buff);
+
+	conv(buff, message_conv, 32);
+
+	//printk("PRINTANDO MESSAGE_CONV: %s\n",message_conv);	
+
+	test_skcipher(message_conv, 16, 0);//0 p/ decrypt
 
 	printk("\nTESTANDO\n");
-	printk("%s",buff);
+	printk("%s\n",result);
 
-	}
-	
-  	
-	
-
-  return 0;
+	strcpy(buffer,result);
+	printk("\nTESTANDO BUFFER\n");
+	printk("%s",buffer);
+	return 0;
 }
