@@ -8,7 +8,7 @@ int main()
 {  
     	printf("Invoking 'listProcessInfo' system call");
 
-	int fd = open("arquivo.txt",O_WRONLY|O_CREAT|O_TRUNC,0666);
+	int fd = open("./arquivo.txt",O_WRONLY|O_CREAT|O_TRUNC,0666);
 	//open("arquivo.txt",O_RDONLY|O_CREAT|O_TRUNC,0666);
 //ou
 //open("arquivo.txt",O_RDWR|O_CREAT|O_TRUNC,0666);
@@ -35,14 +35,20 @@ int main()
 	buffer[cont]='\0';
 
         
-    	long int ret_status = syscall(333,fd,buffer,n); 
-	
-	//printf("\nRetorno buffer: %s\n",buffer);
-	//char bufferReturn;
-	//ret_status = syscall(333,fd,2,bufferReturn);
-        //printf("%s",bufferReturn);
+    	long int ret_status = syscall(333,fd,buffer,16); 
+
 	if(close(fd)<0) printf("\nerro ao fechar arquivo\n");
 
+	fd = open("./arquivo.txt",O_RDONLY|O_CREAT,0666);
+
+	char bufferReturn[16];
+
+	ret_status = syscall(334,fd,bufferReturn,16);
+	
+	printf("\n Retorno decript: %s \n",bufferReturn);
+	
+	if(close(fd)<0) printf("\nerro ao fechar arquivo\n");
+	
          
     if(ret_status == 0) {
          printf("System call 'listProcessInfo' executed correctly. Use dmesg to check processInfo\n");
