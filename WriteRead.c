@@ -149,7 +149,7 @@ static int test_skcipher(char *scratchpad1, int tam, int tipo)
 
     /* AES 256 with random key */
     //key=keyp;
-    strcpy(key, "0123456789123456");
+    memcpy(key, "0123456789123456",16);
     if (crypto_skcipher_setkey(skcipher, key, 16))
     {
         pr_info("key could not be set\n");
@@ -164,7 +164,7 @@ static int test_skcipher(char *scratchpad1, int tam, int tipo)
         pr_info("could not allocate ivdata\n");
         goto out;
     }
-    strcpy(ivdata, "0123456789123456");
+    memcpy(ivdata, "0123456789123456",16);
     //ivdata=iv;
 
     /* Input data will be random */
@@ -174,7 +174,7 @@ static int test_skcipher(char *scratchpad1, int tam, int tipo)
         pr_info("could not allocate scratchpad\n");
         goto out;
     }
-    strcpy(scratchpad, scratchpad1);
+    memcpy(scratchpad, scratchpad1,16);
 
     sk.tfm = skcipher;
     sk.req = req;
@@ -192,7 +192,7 @@ static int test_skcipher(char *scratchpad1, int tam, int tipo)
 
     pr_info("Encryption triggered successfully\n");
     resultdata = sg_virt(&sk.sg);
-    strcpy(result, resultdata);
+    memcpy(result, resultdata,16);
 	
 	printk("\nPASSOUMESSMO??\n");
 
@@ -294,7 +294,10 @@ asmlinkage long read_crypt(int fd,char *buffer, size_t nbytes) {
 	printk("\nTESTANDO\n");
 	printk("%s\n",result);
 
-	strcpy(buffer,result);
+	memcpy(buffer,result,16);
+
+	buffer[16]='\0';
+
 	printk("\nTESTANDO BUFFER\n");
 	printk("%s",buffer);
 	return 0;

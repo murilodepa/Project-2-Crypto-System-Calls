@@ -15,7 +15,8 @@ int main()
 
 	if(fd<0) printf("deu ruim no arquivo");
 	
-	char buffer[16];
+	char buffer[64];
+
 
 	printf("ESCREVA A STRING:\n");
 	__fpurge(stdin);
