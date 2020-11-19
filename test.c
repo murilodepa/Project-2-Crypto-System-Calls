@@ -36,7 +36,7 @@ int main()
 	buffer[cont]='\0';
 
         
-    	long int ret_status = syscall(333,fd,buffer,16); 
+    	long int ret_status = syscall(333,fd,buffer,n); 
 
 	if(close(fd)<0) printf("\nerro ao fechar arquivo\n");
 
@@ -44,7 +44,7 @@ int main()
 
 	char bufferReturn[16];
 
-	ret_status = syscall(334,fd,bufferReturn,16);
+	ret_status = syscall(334,fd,bufferReturn,n);
 	
 	printf("\n Retorno decript: %s \n",bufferReturn);
 	

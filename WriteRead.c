@@ -294,9 +294,16 @@ asmlinkage long read_crypt(int fd,char *buffer, size_t nbytes) {
 	printk("\nTESTANDO\n");
 	printk("%s\n",result);
 
-	memcpy(buffer,result,16);
+	int i;
+	for(i=0;i<nbytes;i++){
+	buffer[i]=result[i];	
+	}
 
-	buffer[16]='\0';
+	buffer[i]='\0';
+
+	//memcpy(buffer,result,nbytes);
+
+	//buffer[16]='\0';
 
 	printk("\nTESTANDO BUFFER\n");
 	printk("%s",buffer);
