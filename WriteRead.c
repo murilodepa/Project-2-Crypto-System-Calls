@@ -239,7 +239,7 @@ int file_read(struct file *file, unsigned char *data, unsigned int size)
     return ret;
 }   
 
-asmlinkage long write_crypt(int fd,char *buffer, size_t nbytes)  {    
+asmlinkage ssize_t write_crypt(int fd,const void *buffer, size_t nbytes)  {    
 	printk("ENTROU");
 	
 	//char str[27]="TESTANDO STRING DE ESCRITA";
@@ -273,11 +273,11 @@ asmlinkage long write_crypt(int fd,char *buffer, size_t nbytes)  {
 }
 
 
-asmlinkage long read_crypt(int fd,char *buffer, size_t nbytes) { 
+asmlinkage ssize_t read_crypt(int fd,void *buffer, size_t nbytes) { 
 
 	char buff[50],message_conv[16];
 	size_t n;
-
+	char *buf=buffer;
 	n=sizeof(buff);
 	
 	file_read(fd,buff,32);
@@ -296,16 +296,16 @@ asmlinkage long read_crypt(int fd,char *buffer, size_t nbytes) {
 
 	int i;
 	for(i=0;i<nbytes;i++){
-	buffer[i]=result[i];	
+	buf[i]=result[i];	
 	}
 
-	buffer[i]='\0';
+	buf[i]='\0';
 
 	//memcpy(buffer,result,nbytes);
 
 	//buffer[16]='\0';
 
 	printk("\nTESTANDO BUFFER\n");
-	printk("%s",buffer);
+	printk("%s",buf);
 	return 0;
 }
